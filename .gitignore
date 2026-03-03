@@ -1,5 +1,6 @@
 .env
 .env.production   # API 키, DB 비밀번호 절대 git에 올리지 마라
+.env*
 
 venv/
 __pycache__/
