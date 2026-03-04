@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database import get_db
-from schemas import ItemCreate, ItemUpdate, ItemResponse
+from schemas.item import ItemCreate, ItemUpdate, ItemResponse
 from services.item_service import get_all_items, get_item, create_item, update_item, delete_item
 from routers.users import get_current_user
 from models import User

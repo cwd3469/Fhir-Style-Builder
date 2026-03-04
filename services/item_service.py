@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from models import Item
-from schemas import ItemCreate, ItemUpdate
+from schemas.item import ItemCreate, ItemUpdate
 
 def get_all_items(db: Session):
     return db.query(Item).all()
