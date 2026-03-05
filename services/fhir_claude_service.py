@@ -41,12 +41,18 @@ class FhirClaudeService:
         # 5. JSON 파싱
         parsed: dict = json.loads(raw_text)
 
+        raw_warnings = parsed.get("warnings", [])
+
+        # warnings가 배열이 아닌 경우 (false, null 등) 빈 배열로 강제 변환
+        warnings_list: list[str] = raw_warnings if isinstance(raw_warnings, list) else []
+
         # 6. FhirComponentResponse 반환
         return FhirComponentResponse(
             component_code=parsed["component_code"],
+            preview_html=parsed["preview_html"],
             component_name=request.component_name,
             fhir_item_count=fhir_item_count,
-            warnings=parsed.get("warnings", [])
+            warnings=warnings_list
         )
 
     def _build_prompt(
@@ -56,36 +62,42 @@ class FhirClaudeService:
             style_lib: str,
             fhir_item_count: int
     ) -> str:
-        """
-        Claude에게 전달할 프롬프트 구성
-        - JSON만 반환하도록 강제
-        - TSX 코드 + warnings 구조
-        """
         questionnaire_json: str = json.dumps(questionnaire, ensure_ascii=False, indent=2)
+
         prompt: str = f"""
-        다음 FHIR R5 Questionnaire JSON을 분석하여 React TypeScript 컴포넌트를 생성하라.
-        총 {fhir_item_count}개의 item이 있다.
+    다음 FHIR R5 Questionnaire JSON을 분석하여 두 가지를 생성하라.
+    총 {fhir_item_count}개의 item이 있다.
 
-        FHIR Questionnaire:
-        {questionnaire_json}
+    FHIR Questionnaire:
+    {questionnaire_json}
 
-        요구사항:
-        - 컴포넌트 이름: {component_name}
-        - 스타일 라이브러리: {style_lib}
-        - TypeScript 타입 명시 필수
-        - 각 FHIR item의 type에 맞는 input 요소 사용
-          - string → <input type="text" />
-          - boolean → <input type="checkbox" />
-          - integer → <input type="number" />
-          - choice → <select />
-          - date → <input type="date" />
-        - FHIR item의 required 필드 반영
-        - linkId를 각 input의 name 속성으로 사용
+    생성 요구사항:
 
-        반드시 아래 JSON 형식으로만 응답하라. 마크다운 코드블록 없이 JSON만 반환하라:
-        {{
-            "component_code": "생성된 TSX 코드 전체",
-            "warnings": ["처리하지 못한 item이 있으면 경고 메시지", "없으면 빈 배열"]
-        }}
-        """
+    [1] component_code: React TypeScript TSX 컴포넌트
+    - 컴포넌트 이름: {component_name}
+    - TypeScript 타입 명시 필수
+    - 스타일: {style_lib}
+    - 각 FHIR item type에 맞는 input 요소 사용
+      - string → <input type="text" />
+      - boolean → <input type="checkbox" />
+      - integer → <input type="number" />
+      - choice → <select />
+      - date → <input type="date" />
+    - required 필드 반영
+    - linkId를 name 속성으로 사용
+
+    [2] preview_html: 동일한 폼을 순수 HTML로 구현
+    - <!DOCTYPE html> 포함 완전한 HTML 문서
+    - Tailwind CSS CDN 사용: <script src="https://cdn.tailwindcss.com"></script>
+    - JavaScript 없이 순수 HTML form 요소만 사용
+    - component_code와 동일한 필드 구성
+    - 한국어 label 유지
+
+    반드시 아래 JSON 형식으로만 응답하라. 마크다운 코드블록 없이 JSON만 반환하라:
+    {{
+        "component_code": "React TypeScript TSX 코드 전체",
+        "preview_html": "순수 HTML 전체 문서",
+        "warnings": []
+    }}
+    """
         return prompt

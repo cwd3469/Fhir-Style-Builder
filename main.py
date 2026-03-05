@@ -12,7 +12,7 @@ app = FastAPI()
 # CORS 미들웨어 — Next.js(3000) → FastAPI(8000) 허용
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000" , "http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

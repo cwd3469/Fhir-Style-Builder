@@ -1,7 +1,7 @@
 # schemas.py
 from pydantic import BaseModel, field_validator
 from typing import Optional, Literal
-from fhir.resources.R4B.questionnaire import Questionnaire
+from fhir.resources.questionnaire import Questionnaire
 
 # ── Input ──────────────────────────────────────────────────────
 class FhirQuestionnaireRequest(BaseModel):
@@ -53,13 +53,12 @@ class FhirComponentResponse(BaseModel):
     """
     Claude가 생성한 React TSX 컴포넌트 응답
     """
-    # 생성된 TSX 코드 전체 문자열
+    # TSX 코드 — 다운로드용
     component_code: str
-    # 컴포넌트 이름
+    # 순수 HTML — iframe 렌더링용
+    preview_html: str
     component_name: str
-    # 처리된 FHIR item 개수
     fhir_item_count: int
-    # 처리 못한 item 경고 목록
     warnings: Optional[list[str]] = []
 
 
