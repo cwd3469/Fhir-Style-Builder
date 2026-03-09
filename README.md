@@ -167,6 +167,7 @@ FHIR R5 Questionnaire → React TSX 컴포넌트 생성
 **Error**
 | Status | 설명 |
 |--------|------|
+| `400` | 존재하지 않은 |
 | `422` | 유효하지 않은 FHIR R5 Questionnaire |
 | `500` | Claude API 호출 실패 |
 
