@@ -11,8 +11,10 @@ pipeline {
         }
         stage('Prepare') {
             steps {
-                // EC2에 저장된 .env 파일을 workspace로 복사
-                sh 'cp /home/ubuntu/Fhir-Style-Builder/.env $WORKSPACE/.env'
+                // Jenkins Credentials에서 .env 파일 주입
+                withCredentials([file(credentialsId: 'fhir-env-file', variable: 'ENV_FILE')]) {
+                    sh 'cp $ENV_FILE $WORKSPACE/.env'
+                }
             }
         }
         stage('Deploy') {
