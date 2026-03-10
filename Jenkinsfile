@@ -13,8 +13,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 // 기존 컨테이너 내리고 재빌드 후 실행
-                sh 'docker compose down'
-                sh 'docker compose up -d --build'
+                sh 'docker-compose down'
+                sh 'docker-compose up -d --build'
             }
         }
     }
