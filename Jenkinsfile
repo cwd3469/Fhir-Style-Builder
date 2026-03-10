@@ -12,7 +12,7 @@ pipeline {
         stage('Prepare') {
             steps {
                 // Jenkins Credentials에서 .env 파일 주입
-                withCredentials([file(credentialsId: 'fhir-env-file', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'fhir-env-file-back-product', variable: 'ENV_FILE')]) {
                     sh 'cp $ENV_FILE $WORKSPACE/.env'
                 }
             }
