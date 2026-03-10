@@ -19,7 +19,7 @@ pipeline {
             steps {
                 // 기존 컨테이너 내리고 재빌드 후 실행
                 sh 'docker-compose down'
-                sh 'docker-compos\e up -d --build'
+                sh 'docker-compose up -d --build'
             }
         }
     }
