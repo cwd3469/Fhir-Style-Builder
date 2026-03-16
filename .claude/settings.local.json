@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose up --build)",
+      "Bash(git push origin develop)",
+      "Bash(pip show git-filter-repo)",
+      "Bash(pip3 show git-filter-repo)",
+      "Bash(brew list git-filter-repo)"
+    ]
+  }
+}
